@@ -36,7 +36,7 @@ function processHostMeta(text) {
 }
 function processWebFinger(text) {
 	var uDAVdomain = JSON.parse(text).links["http:\/\/unhosted.org\/spec\/DAV\/"];
-	var app = "www.myfavouritesandwich.org";
+	var app = "www.mysecretsandwich.info";
 	window.location=uDAVdomain+"oauth2/auth?client_id="+app+"&redirect_uri="+app+"/cb.html&scope=dav&response_type=token&user_name="
 		+localStorage.getItem('user_name');
 }
