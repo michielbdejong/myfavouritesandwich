@@ -4,6 +4,23 @@ body{
 	background: #83b457;
 	
 }
+
+.preload2, .preload{
+	position: absolute;
+	overflow: hidden;
+	width: 1px;
+	height: 1px;
+	left: -5000px;
+}
+
+.preload2{
+	background-image: url('./img/changehover.png');
+}
+.preload{
+	background-image: url('./img/takemeinhover.png');
+}
+
+
 #footerSpacer {
     padding-bottom: 200px; /* bottom padding for footer */
 }
@@ -46,6 +63,20 @@ section.container_12 {
 	margin: 0 auto;
 	
 }
+	#preheader span{
+	
+		position: absolute;
+		width: 100%;
+		text-align: left;
+	}
+		#preheader span span{
+		display: block;
+		position: relative;
+		margin: 15px auto;
+		width: 960px;
+		text-align: left;
+			}
+
 	#preheader figure{
 		position: relative;
 		background: url('./img/plate.png') no-repeat right top;
@@ -81,6 +112,7 @@ header {
 	
 
 }
+
 
 header.data{
 	width: 600px;
@@ -120,6 +152,10 @@ header input[type=submit]{
 	top: -2px;
 	text-indent: -5000px;
 }
+	header input.submitingredients{
+		background: url('./img/change.png') no-repeat left top;
+	}
+
 	header.data input{
 		margin-bottom: 10px;
 	}
@@ -139,6 +175,16 @@ header input[type=submit]:active{
 	background: url('./img/takemein.png') no-repeat left top;
 	cursor: pointer;
 }
+	header input.submitingredients:hover{
+		background: url('./img/changehover.png') no-repeat left top;
+		cursor: pointer;
+	}
+	
+	header input.submitingredients:active{
+		background: url('./img/change.png') no-repeat left top;
+		cursor: pointer;
+	}
+	
 
 
 header input[type=text]{

@@ -1,0 +1,22 @@
+<html>
+<script>
+function gup( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+</script>
+<body onload="
+	localStorage.setItem('dav', gup('dav'));
+	localStorage.setItem('token', gup('token'));
+	window.opener.processToken();
+	window.close();
+">
+</body>
+</html>
