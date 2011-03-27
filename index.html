@@ -5,6 +5,8 @@
 
 <script src="html5.js"></script><!-- this is the javascript allowing html5 to run in older browsers -->
 
+<script src="sjcl/sjcl.js"></script>
+
 <title>Mysecretsandwich - An Unhosted demo</title>
 <link rel="stylesheet" href="css/uncompressed/reset.css" />
 <link rel="stylesheet" href="css/uncompressed/text.css" />
@@ -38,20 +40,20 @@ function retrieveFavSandwich() {
             processFavSandwich(req.responseText);
             }
           }
-	req.open("GET", "http://"+localStorage.getItem("dav")+"/favSandwich.json", true);
+	req.open("GET", "http://"+localStorage.getItem("dav")+"/favSandwich.crypto", true);
 	req.setRequestHeader("Authorization", "Basic "+localStorage.getItem("token"));
 	req.withCredentials = "true";
 	req.send();
 }
 function processFavSandwich(text) {
-	var sandwich = JSON.parse(text);
+	var sandwich = JSON.parse(sjcl.decrypt('asdf', text));
 	document.getElementById('showFirstIngredient').innerHTML = sandwich.ingredients[0];
 	document.getElementById('showSecondIngredient').innerHTML = sandwich.ingredients[1];
 	document.getElementById('firstIngredient').value = sandwich.ingredients[0];
 	document.getElementById('secondIngredient').value = sandwich.ingredients[1];
 }
 function saveFavSandwich(ingredients) {
-	var text = JSON.stringify({"ingredients":ingredients});
+	var text = sjcl.encrypt('asdf', JSON.stringify({"ingredients":ingredients}));
 	var req = new XMLHttpRequest();
 	req.onreadystatechange=function()
           {
@@ -60,7 +62,7 @@ function saveFavSandwich(ingredients) {
             processFavSandwich(req.responseText);
             }
           }
-	req.open("PUT", "http://"+localStorage.getItem("dav")+"/favSandwich.json", true);
+	req.open("PUT", "http://"+localStorage.getItem("dav")+"/favSandwich.crypto", true);
 	req.setRequestHeader("Authorization", "Basic "+localStorage.getItem("token"));
 	req.withCredentials = "true";
 	req.send(text);
