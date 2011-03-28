@@ -71,6 +71,11 @@ function saveFavSandwich(ingredients) {
 <body onload="processToken();">
 <div class="preload"></div>
 <div class="preload2"></div>
+<div id="preheader"></div>
+<div id="plateContainer">
+	<figure id="plate"></figure>
+</div>
+
 <div id="mainWrap">
 
 
@@ -79,8 +84,7 @@ function saveFavSandwich(ingredients) {
 
 
 
-		<div id="preheader"><figure id="plate"></figure></div>
-		<header>
+				<header>
 			<h1>My Favourite Sandwich</h1>
 			<p>Login with my unhosted account</p>
 			<input id="user" name="unhostedacct" onfocus="if(this.value=='user@provider.org'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='user@provider.org'}" type="text" value="user@provider.org"/>
@@ -106,7 +110,7 @@ function saveFavSandwich(ingredients) {
 				<span id="loggedInUser"></span>
 			</span>
 				
-			</figure><figure id="plate"></figure>
+			
 		</div>
 			
 		<header class="data">

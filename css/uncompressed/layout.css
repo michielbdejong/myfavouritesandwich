@@ -1,4 +1,6 @@
 body{
+	margin: 0;
+	padding: 0;
 	font-family: 'lucida grande', helvetica, arial, sans-serif;
 	text-align: center;
 	background: #83b457;
@@ -25,10 +27,25 @@ body{
     padding-bottom: 200px; /* bottom padding for footer */
 }
 html, body {
-    height: 100%;
+height: 100%;
     display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+   	
 }
 
+body{
+display: block;
+
+width: 100%;
+min-width:960px;
+margin: 0 auto;
+overflow: visible;
+
+
+}
+//html{background: yellow;}
 
 #mainWrap{
 	position:relative; /* needed for footer positioning*/
@@ -36,13 +53,14 @@ html, body {
 	height:auto !important; /* real browsers */
 	height:100%; /* IE6: treaded as min-height*/
 	min-height:100%; /* real browsers */
+	
 }
 
 header h1{
 	background: url('./img/myfavouritesandwich.png') no-repeat center top;
 	display: block;
 	overflow: hidden;
-	width: 100%px;
+	width: 100%;
 	height: 64px;
 	text-indent: -5000px;
 	
@@ -77,15 +95,25 @@ section.container_12 {
 		text-align: left;
 			}
 
-	#preheader figure{
+	#plateContainer{
+		
+		display: block;
+		position: relative;
+		top: -50px;
+		margin: 0 auto;
+		margin-bottom: -300px;
+		height: 254px;
+		overflow: hidden;
+		
+	}
+	#plateContainer figure{
 		position: relative;
 		background: url('./img/plate.png') no-repeat right top;
-		display: block;
-		width: 634px;
+		width: 672px;
 		margin: 0 auto;
 		height: 254px;
 		z-index: 100;
-		left: 390px;
+		left: 410px;
 		top: 0px;
 		overflow: hidden;
 	}
@@ -254,7 +282,7 @@ header p{
 
 footer {
 	
-	background: #bed7a7 url('./img/footerback.png') repeat-x top left;
+	background: #bed7a7 url('./img/footerback.png') repeat-x top left fixed;
 	width: 100%;
 	font-size: 1em;
 	display: block;
@@ -285,7 +313,7 @@ footer {
 		height: 200px;
 		width: 190px;
 		position: absolute;
-		left: 365px;
+		left: 370px;
 		margin: 0 auto;
 		
 	}
