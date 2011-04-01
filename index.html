@@ -3,72 +3,49 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-<script src="html5.js"></script><!-- this is the javascript allowing html5 to run in older browsers -->
-
 <title>Myfavouritesandwich - An Unhosted demo</title>
 <link rel="stylesheet" href="css/uncompressed/reset.css" />
 <link rel="stylesheet" href="css/uncompressed/text.css" />
 <link rel="stylesheet" href="general.css" />
 <link rel="stylesheet" href="css/uncompressed/layout.css" />
 
+<script src="unhosted.js"></script>
 <script>
-//DECIDE WHETHER LOGGED IN:
-function processToken() {
-	if(localStorage.getItem('token') === null) {
-		document.getElementById('loginScreen').style.display='block';
-		document.getElementById('loggedIn').style.display='none';
-	} else {
-		document.getElementById('loginScreen').style.display='none';
-		document.getElementById('loggedIn').style.display='block';
-		retrieveFavSandwich();
-	}
+function showLocked(userName, sandwich) {
+	document.getElementById('loggedIn').style.display='none';
+	document.getElementById('loginScreen').style.display='block';
 }
-
-//LOGGED IN:
-function retrieveFavSandwich() { 
+function showUnlocked(userName) {
 	document.getElementById('loggedInUser').innerHTML=
 		'<span>Logged in as <strong>'
-		+localStorage.getItem('user_name')
-		+'</strong> [<a onclick="localStorage.removeItem(\'token\');processToken();">Logout</a>]</span>';
-	var req = new XMLHttpRequest();
-	req.onreadystatechange=function()
-          {
-          if (req.readyState==4 && req.status==200)
-            {
-            processFavSandwich(req.responseText);
-            }
-          }
-	req.open("GET", "http://"+localStorage.getItem("dav")+"/favSandwich.json", true);
-	req.setRequestHeader("Authorization", "Basic "+localStorage.getItem("token"));
-	req.withCredentials = "true";
-	req.send();
-}
-function processFavSandwich(text) {
-	var sandwich = JSON.parse(text);
+		+unhosted.user+
+		+'</strong> [<a onclick="unhosted.userName.set(null);showLocked()">Logout</a>]</span>';
 	document.getElementById('showFirstIngredient').innerHTML = sandwich.ingredients[0];
 	document.getElementById('showSecondIngredient').innerHTML = sandwich.ingredients[1];
 	document.getElementById('firstIngredient').value = sandwich.ingredients[0];
 	document.getElementById('secondIngredient').value = sandwich.ingredients[1];
+
+	document.getElementById('loginScreen').style.display='none';
+	document.getElementById('loggedIn').style.display='block';
 }
-function saveFavSandwich(ingredients) {
-	var text = JSON.stringify({"ingredients":ingredients});
-	var req = new XMLHttpRequest();
-	req.onreadystatechange=function()
-          {
-          if (req.readyState==4 && req.status==200)
-            {
-            processFavSandwich(req.responseText);
-            }
-          }
-	req.open("PUT", "http://"+localStorage.getItem("dav")+"/favSandwich.json", true);
-	req.setRequestHeader("Authorization", "Basic "+localStorage.getItem("token"));
-	req.withCredentials = "true";
-	req.send(text);
-	retrieveFavSandwich();//do full round-trip to make sure browser and unhosted storage node are always in sync
+
+function show() {
+	var userName = unhosted.userName.get();
+	if(unhosted.userName.get()) {
+		var sandwich = unhosted.dav.get('favSand.json');
+		showUnlocked(userName, sandwich);
+	} else {
+		showLocked();
+	}
+}
+
+function save(ingredients) {
+	unhosted.dav.put('favSand.json', {"ingredients":ingredients});
+	show();//do full round-trip to make sure browser and unhosted storage node are always in sync
 }
 </script>
 </head>
-<body onload="processToken();">
+<body onload="show()">
 <div class="preload"></div>
 <div class="preload2"></div>
 <div id="preheader"></div>
@@ -88,13 +65,14 @@ function saveFavSandwich(ingredients) {
 			<h1>My Favourite Sandwich</h1>
 			<p>Login with my unhosted account</p>
 			<input id="user" name="unhostedacct" onfocus="if(this.value=='user@provider.org'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='user@provider.org'}" type="text" value="user@provider.org"/>
-			<input class="submit" name="submit" type="submit" value="Submit!" onclick="localStorage.setItem('user_name', document.getElementById('user').value); window.open('./popup.html', 'Auth2-cs', 'width=500, height=500');">
+			<input class="submit" name="submit" type="submit" value="Submit!" onclick="unhosted.userName.set(document.getElementById('user').value)">
 		</header>
 			
 		<div id="register">
 			<p><strong>Don't have an unhosted account? </strong> Register here:</p>
-			<input id="provider" name="unhostedacct" type="text" value="redlibre.org"/>
-			<input class="submit" name="submit" type="submit" value="Create account" onclick="window.open('http://'+document.getElementById('provider').value+'/register.html', 'Register', 'width=500, height=500');">
+			<input id="registerAcct" name="unhostedacct" type="text" value="user@provider.org"/>
+			<input class="submit" name="submit" type="submit" value="Create account" onclick="document.getElementById('errorText').innerHTML=unhosted.register(document.getElementById('registerAcct').value)">
+			<p><span id="errorText"></span></p>
 		</div>
 
 
@@ -123,7 +101,7 @@ function saveFavSandwich(ingredients) {
 			<input id="firstIngredient" name="firstIngredient" onfocus="if(this.value=='1st ingredient'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='1st ingredient'}" type="text" value="1st ingredient"/>
 			<input id="secondIngredient" name="secondIngredient" onfocus="if(this.value=='2nd ingredient'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='2nd ingredient'}" type="text" value="2nd ingredient"/>
 					
-			<input class="submitingredients" name="submit" type="submit" value="Submit!" onclick="saveFavSandwich(
+			<input class="submitingredients" name="submit" type="submit" value="Submit!" onclick="save(
 							[document.getElementById('firstIngredient').value,
 							document.getElementById('secondIngredient').value]);"/>
 		</header>			
