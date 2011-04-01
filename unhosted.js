@@ -40,8 +40,8 @@ var WebFinger = function() {
 
 var OAuth = function () {
 	var oAuth = {}
-	oAuth.dance = function(oAuthDomain, userName, nameSpace) {
-		window.location = davDdomain
+	oAuth.dance = function(oAuthDomain, userName, app) {
+		window.location = oAuthDomain
 					+"oauth2/auth"
 					+"?client_id="+app
 					+"&redirect_uri="+app
@@ -54,7 +54,7 @@ var OAuth = function () {
 		var regex = new RegExp("[\\?&]token=([^&#]*)");
 		var results = regex.exec(window.location.href);
 		if(results) {
-			localStorage.setItem("unhosted:token", results[1]);
+			localStorage.setItem("OAuth2-cs::token", results[1]);
 			window.location = "/";
 		}
 	}
@@ -71,13 +71,18 @@ var DAV = function() {
 	var dav = {}
 	dav.get = function(key) {
 		var xhr = new XMLHttpRequest();
-		var url = "http://"+localStorage.getItem("unhosted::davDomain")+"/"+key;
+		var url = localStorage.getItem("unhosted::davDomain")
+			+"webdav/"
+			+localStorage.getItem("unhosted::userName").replace("@", "/")
+			//+"/"+document.domain+
+			+"/"+"www.myfavouritesandwich.org"
+			+"/"+key;
 		xhr.open("GET", url, false);
-		xhr.setRequestHeader("Authorization", "Basic "+localStorage.getItem("unhosted::token"));
+		xhr.setRequestHeader("Authorization", "Basic "+localStorage.getItem("OAuth2-cs::token"));
 		xhr.withCredentials = "true";
 		xhr.send();
 		if(xhr.status == 200) {
-			return JSON.parse(xhr.responseTest);
+			return JSON.parse(xhr.responseText);
 		} else {
 			alert("error: got status "+xhr.status+" when doing basic auth GET on URL "+url);
 		}
@@ -85,9 +90,14 @@ var DAV = function() {
 	dav.put = function(key, value) {
 		var text = JSON.stringify(value);
 		var xhr = new XMLHttpRequest();
-		var url = "http://"+localStorage.getItem("unhosted::davDomain")+"/"+key;
+		var url = localStorage.getItem("unhosted::davDomain")
+			+"webdav/"
+			+localStorage.getItem("unhosted::userName").replace("@", "/")
+			//+"/"+document.domain+
+			+"/"+"www.myfavouritesandwich.org"
+			+"/"+key;
 		xhr.open("PUT", url, false);
-		xhr.setRequestHeader("Authorization", "Basic "+localStorage.getItem("unhosted::token"));
+		xhr.setRequestHeader("Authorization", "Basic "+localStorage.getItem("OAuth2-cs::token"));
 		xhr.withCredentials = "true";
 		xhr.send(text);
 		if(xhr.status != 200) {
@@ -119,7 +129,7 @@ var Unhosted = function() {
 	}
 
 	unhosted.getUserName = function() {
-		if(localStorage.getItem("unhosted::token")) {
+		if(localStorage.getItem("OAuth2-cs::token")) {
 			return localStorage.getItem("unhosted::userName");
 		} else {//not properly unlocked the DAV storage
 			return null;

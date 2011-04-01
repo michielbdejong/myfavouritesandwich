@@ -11,11 +11,11 @@
 
 <script src="unhosted.js"></script>
 <script>
-function showLocked(userName, sandwich) {
+function showLocked(userName) {
 	document.getElementById('loggedIn').style.display='none';
 	document.getElementById('loginScreen').style.display='block';
 }
-function showUnlocked(userName) {
+function showUnlocked(userName, sandwich) {
 	document.getElementById('loggedInUser').innerHTML=
 		'<span>Logged in as <strong>'
 		+unhosted.user+
@@ -30,9 +30,9 @@ function showUnlocked(userName) {
 }
 
 function show() {
-	var userName = unhosted.userName.get();
-	if(unhosted.userName.get()) {
-		var sandwich = unhosted.dav.get('favSand.json');
+	var userName = unhosted.getUserName();
+	if(userName) {
+		var sandwich = unhosted.dav.get('favSandwich.json');
 		showUnlocked(userName, sandwich);
 	} else {
 		showLocked();
@@ -40,7 +40,7 @@ function show() {
 }
 
 function save(ingredients) {
-	unhosted.dav.put('favSand.json', {"ingredients":ingredients});
+	unhosted.dav.put('favSandwich.json', {"ingredients":ingredients});
 	show();//do full round-trip to make sure browser and unhosted storage node are always in sync
 }
 </script>
@@ -65,7 +65,7 @@ function save(ingredients) {
 			<h1>My Favourite Sandwich</h1>
 			<p>Login with my unhosted account</p>
 			<input id="user" name="unhostedacct" onfocus="if(this.value=='user@provider.org'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='user@provider.org'}" type="text" value="user@provider.org"/>
-			<input class="submit" name="submit" type="submit" value="Submit!" onclick="unhosted.userName.set(document.getElementById('user').value)">
+			<input class="submit" name="submit" type="submit" value="Submit!" onclick="unhosted.setUserName(document.getElementById('user').value)">
 		</header>
 			
 		<div id="register">
