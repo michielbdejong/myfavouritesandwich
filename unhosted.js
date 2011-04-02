@@ -65,7 +65,7 @@ var OAuth = function () {
 					+"&user_name="+userName;
 	}
 	oAuth.revoke = function() {
-		localStorage.setItem("OAuth2-cs::token", null);
+		localStorage.removeItem("OAuth2-cs::token");
 	}
 	//receive incoming OAuth token, if present:
 	oAuth.receiveToken = function() {
@@ -118,7 +118,7 @@ var DAV = function() {
 		xhr.setRequestHeader("Authorization", "Basic "+localStorage.getItem("OAuth2-cs::token"));
 		xhr.withCredentials = "true";
 		xhr.send(text);
-		if(xhr.status != 200) {
+		if(xhr.status != 200 && xhr.status != 204) {
 			alert("error: got status "+xhr.status+" when doing basic auth PUT on URL "+url);
 		}
 	}
@@ -135,10 +135,12 @@ var Unhosted = function() {
 	unhosted.dav = DAV();
 
 	unhosted.setUserName = function(userName) {
-		localStorage.setItem("unhosted::userName", userName);
 		if(userName == null) {
+			localStorage.removeItem("unhosted::userName");
+			localStorage.removeItem("unhosted::davDomain")
 			OAuth().revoke();
 		} else {
+			localStorage.setItem("unhosted::userName", userName);
 			var davDomain = WebFinger().getDavDomain(userName);
 			if(davDomain != null) {
 				localStorage.setItem("unhosted::davDomain", davDomain);
@@ -159,18 +161,18 @@ var Unhosted = function() {
 		if(registerUrl) {
 			window.location(registerUrl);
 		} else {
-			var parts = userNamer.split("@");
+			var parts = userName.split("@");
 			if(parts.length == 2) {
 				//alert the sys admin about the error through a 404 message to her website:
 				var xhr = new XMLHttpRequest();
-				var url = "http://www."+parts[1]+"unhosted-account-failure/?user="+userName;
+				var url = "http://www."+parts[1]+"/unhosted-account-failure/?user="+userName;
 				xhr.open("GET", url, true);
 				xhr.send();
 
 				//inform the user:
 				return "Unhosted account not found! Please alert an IT hero at "
 					+parts[1]
-					+" about this. For alternative providers, see http://unhosted.org/";
+					+" about this. For alternative providers, see http://www.unhosted.org/";
 			} else {
 				return "Please use one '@' symbol in the user name";
 			}
@@ -179,10 +181,3 @@ var Unhosted = function() {
 
 	return unhosted;
 }
-
-
-  //////////////////////
- //  global instance //
-//////////////////////
-
-var unhosted = Unhosted();
