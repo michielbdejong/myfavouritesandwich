@@ -4,31 +4,46 @@
 
 var WebFinger = function() {
 	var webFinger = {};
-	webFinger.getDavDomain = function(userName) {
+	var getHostMeta = function(userName) {
 		//split the userName at the "@" symbol:
 		var parts = userName.split("@");
-		var user = parts[0];
-		var domain = parts[1];
+		if(parts.length == 2) {
+			var user = parts[0];
+			var domain = parts[1];
 
-		//get the host-meta data for the domain:
-	        var xhr1 = new XMLHttpRequest();
-		var url1 = "http://"+domain+"/.well-known/host-meta?format=json";
-		xhr1.open("GET", url1, false);	
-		xhr1.send();
-		if(xhr1.status != 200) {
-			return null;
+			//get the host-meta data for the domain:
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+domain+"/.well-known/host-meta?format=json";
+			xhr.open("GET", url, false);	
+			xhr.send();
+			if(xhr.status == 200) {
+				return JSON.parse(xhr.responseText);
+			}
 		}
-
+		return null;
+	}
+	webFinger.getDavDomain = function(userName) {
 		//get the WebFinger data for the user and extract the uDAVdomain:
-		var template = JSON.parse(xhr1.responseText).links.lrdd[0].template;
-		var xhr2 = new XMLHttpRequest();
-		var url2 = template.replace("{uri}", "acct:"+userName, true);
-		xhr2.open("GET", url2, false);
-		xhr2.send();
-		if(xhr2.status != 200) {
+		var hostMeta = getHostMeta(userName);
+		if(hostMeta && hostMeta.links && hostMeta.links.lrdd && hostMeta.links.lrdd.length && hostMeta.links.lrdd[0].template) {
+			var template = hostMeta.links.lrdd[0].template;
+			var xhr = new XMLHttpRequest();
+			var url = template.replace("{uri}", "acct:"+userName, true);
+			xhr.open("GET", url, false);
+			xhr.send();
+			if(xhr.status == 200) {
+				return JSON.parse(xhr.responseText).links["http:\/\/unhosted.org\/spec\/DAV\/"];
+			}
+		}
+		return null;
+	}
+	webFinger.getAdminUrl = function(userName) {
+		var fromHostMeta = getHostMeta(userName);
+		if(fromHostMeta && fromHostMeta.links && fromHostMeta.links.register) {
+			return fromHostMeta.links.register+"?redirect_url="+window.location;
+		} else {
 			return null;
 		}
-		return JSON.parse(xhr2.responseText).links["http:\/\/unhosted.org\/spec\/DAV\/"];
 	}
 	return webFinger;
 }
@@ -48,6 +63,9 @@ var OAuth = function () {
 					+"&scope=dav"
 					+"&response_type=token"
 					+"&user_name="+userName;
+	}
+	oAuth.revoke = function() {
+		localStorage.setItem("OAuth2-cs::token", null);
 	}
 	//receive incoming OAuth token, if present:
 	oAuth.receiveToken = function() {
@@ -114,33 +132,51 @@ var DAV = function() {
 
 var Unhosted = function() {
 	var unhosted = {};
+	unhosted.dav = DAV();
 
 	unhosted.setUserName = function(userName) {
-		var davDomain = WebFinger().getDavDomain(userName);
-		if(davDomain == null) {
-			return null;
-		}
-
-		//save everything in local storage and dance OAuth2-cs:
 		localStorage.setItem("unhosted::userName", userName);
-		localStorage.setItem("unhosted::davDomain", davDomain);
-
-		OAuth().dance(davDomain, userName, document.domain);
+		if(userName == null) {
+			OAuth().revoke();
+		} else {
+			var davDomain = WebFinger().getDavDomain(userName);
+			if(davDomain != null) {
+				localStorage.setItem("unhosted::davDomain", davDomain);
+				OAuth().dance(davDomain, userName, document.domain);
+			}
+		}
 	}
 
 	unhosted.getUserName = function() {
 		if(localStorage.getItem("OAuth2-cs::token")) {
-			return localStorage.getItem("unhosted::userName");
-		} else {//not properly unlocked the DAV storage
-			return null;
+			return localStorage.getItem("unhosted::userName").trim();
+		}
+		return null;
+	}
+
+	unhosted.register = function(userName) {
+		var registerUrl = WebFinger().getAdminUrl(userName);
+		if(registerUrl) {
+			window.location(registerUrl);
+		} else {
+			var parts = userNamer.split("@");
+			if(parts.length == 2) {
+				//alert the sys admin about the error through a 404 message to her website:
+				var xhr = new XMLHttpRequest();
+				var url = "http://www."+parts[1]+"unhosted-account-failure/?user="+userName;
+				xhr.open("GET", url, true);
+				xhr.send();
+
+				//inform the user:
+				return "Unhosted account not found! Please alert an IT hero at "
+					+parts[1]
+					+" about this. For alternative providers, see http://unhosted.org/";
+			} else {
+				return "Please use one '@' symbol in the user name";
+			}
 		}
 	}
 
-	unhosted.register = function(domain) {
-		return "http://unhosted."+domain+"/register.html";
-	}
-
-	unhosted.dav = DAV();
 	return unhosted;
 }
 

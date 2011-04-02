@@ -18,8 +18,8 @@ function showLocked(userName) {
 function showUnlocked(userName, sandwich) {
 	document.getElementById('loggedInUser').innerHTML=
 		'<span>Logged in as <strong>'
-		+unhosted.user+
-		+'</strong> [<a onclick="unhosted.userName.set(null);showLocked()">Logout</a>]</span>';
+		+unhosted.getUserName()
+		+'</strong> [<a onclick="unhosted.setUserName(null);showLocked()">Logout</a>]</span>';
 	document.getElementById('showFirstIngredient').innerHTML = sandwich.ingredients[0];
 	document.getElementById('showSecondIngredient').innerHTML = sandwich.ingredients[1];
 	document.getElementById('firstIngredient').value = sandwich.ingredients[0];
