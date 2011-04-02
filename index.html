@@ -45,7 +45,7 @@ function showCurrentUser(userName) {
 	document.getElementById('currentUser').innerHTML=
 		'Current user is <strong>'
 		+unhosted.getUserName()
-		+'</strong> (click this bar to close)';
+		+'</strong>';
 }
 
 function showCurrentSandwich(sandwich) {
@@ -116,16 +116,13 @@ function show() {
 
 
 
-		<div id="preheader" onclick="lockUnhostedAccount();show();">
+		<div id="preheader">
 			<span>
 				<span id="currentUser"></span>
 			</span>
 			<div id="plateContainer">
 				<figure id="plate"></figure>
 			</div>
-			
-				
-			
 		</div>
 			
 		<header class="data">
@@ -137,6 +134,7 @@ function show() {
 			<input class="submitingredients" name="submit" type="submit" value="Submit!" onclick="saveSandwich(
 							[document.getElementById('firstIngredient').value,
 							document.getElementById('secondIngredient').value]);show();"/>
+ 			[<a onclick="lockUnhostedAccount();show();">Close</a>]
 		</header>
 
 

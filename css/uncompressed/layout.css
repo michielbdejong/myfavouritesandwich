@@ -83,7 +83,7 @@ section.container_12 {
 }
 	#preheader span{
 	
-		position: absolute;
+		position: relative;
 		width: 100%;
 		text-align: left;
 	}
