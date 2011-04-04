@@ -46,7 +46,7 @@ function showCurrentUser(userName) {
 	document.getElementById('currentUser').innerHTML=
 		'Current user is <strong>'
 		+unhosted.getUserName()
-		+'</strong> [<a onclick="localStorage.removeItem(\'OAuth2-cs::token\');show();">Lock account</a>]';
+		+'</strong> [<a onclick="localStorage.removeItem(\'OAuth2-cs::token\');show();">Lock</a>]';
 }
 
 function showCurrentSandwich(sandwich) {
@@ -98,7 +98,6 @@ function show() {
 			<p>Login with my unhosted account</p>
 			<input id="user" name="unhostedacct" onfocus="if(this.value=='user@provider.org'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='user@provider.org'}" type="text" value="user@provider.org"/>
 			<input class="submit" name="submit" type="submit" value="Submit!" onclick="unlockUnhostedAccount(document.getElementById('user').value);show();">
-			<p>(attention: demo@demo.redlibre.org is down for maintenance, as we switch to a clearer standard for the http basic auth token)</p>
 		</header>
 			
 		<div id="register">

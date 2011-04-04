@@ -40,7 +40,7 @@ var WebFinger = function() {
 	webFinger.getAdminUrl = function(userName) {
 		var fromHostMeta = getHostMeta(userName);
 		if(fromHostMeta && fromHostMeta.links && fromHostMeta.links.register) {
-			return fromHostMeta.links.register+"?redirect_url="+window.location;
+			return fromHostMeta.links.register[0].template.replace("\{uri\}",userName).replace("\{redirect_url\}", window.location);
 		} else {
 			return null;
 		}
@@ -101,8 +101,7 @@ var DAV = function() {
 			+"/"+"www.myfavouritesandwich.org"
 			+"/"+key;
 		xhr.open("GET", url, false);
-//		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
-		xhr.setRequestHeader("Authorization", "Basic " + localStorage.getItem("OAuth2-cs::token"));
+		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
 		xhr.withCredentials = "true";
 		xhr.send();
 		if(xhr.status == 200) {
@@ -121,8 +120,7 @@ var DAV = function() {
 			+"/"+"www.myfavouritesandwich.org"
 			+"/"+key;
 		xhr.open("PUT", url, false);
-//		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
-		xhr.setRequestHeader("Authorization", "Basic " + localStorage.getItem("OAuth2-cs::token"));
+		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
 		xhr.withCredentials = "true";
 		xhr.send(text);
 		if(xhr.status != 200 && xhr.status != 204) {
@@ -166,7 +164,7 @@ var Unhosted = function() {
 	unhosted.register = function(userName) {
 		var registerUrl = WebFinger().getAdminUrl(userName);
 		if(registerUrl) {
-			window.location(registerUrl);
+			window.location = registerUrl;
 		} else {
 			var parts = userName.split("@");
 			if(parts.length == 2) {
