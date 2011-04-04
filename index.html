@@ -94,7 +94,7 @@ function saveFavSandwich(ingredients) {
 		<div id="register">
 			<p><strong>Don't have an unhosted account? </strong> Register here:</p>
 			<input id="provider" name="unhostedacct" type="text" value="redlibre.org"/>
-			<input class="submit" name="submit" type="submit" value="Create account" onclick="window.open('http://'+document.getElementById('provider').value+'/register.html', 'Register', 'width=500, height=500');">
+			<input class="submit" name="submit" type="submit" value="Create account" onclick="window.open('http://unhosted.'+document.getElementById('provider').value+'/register.html', 'Register', 'width=500, height=500');">
 		</div>
 
 
@@ -109,10 +109,6 @@ function saveFavSandwich(ingredients) {
 			<span>
 				<span id="loggedInUser"></span>
 			</span>
-			<div id="plateContainer">
-				<figure id="plate"></figure>
-			</div>
-			
 				
 			
 		</div>
