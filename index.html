@@ -46,7 +46,7 @@ function showCurrentUser(userName) {
 	document.getElementById('currentUser').innerHTML=
 		'Current user is <strong>'
 		+unhosted.getUserName()
-		+'</strong>';
+		+'</strong> [<a onclick="localStorage.removeItem(\'OAuth2-cs::token\');show();">Logout</a>]';
 }
 
 function showCurrentSandwich(sandwich) {
@@ -82,10 +82,7 @@ function show() {
 <div class="preload"></div>
 <div class="preload2"></div>
 <div id="preheader"></div>
-<div id="plateContainer">
-	<figure id="plate"></figure>
-</div>
-
+asdf
 <div id="mainWrap">
 
 
@@ -121,9 +118,6 @@ function show() {
 			<span>
 				<span id="currentUser"></span>
 			</span>
-			<div id="plateContainer">
-				<figure id="plate"></figure>
-			</div>
 		</div>
 			
 		<header class="data">

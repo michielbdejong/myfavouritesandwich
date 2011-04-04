@@ -101,7 +101,8 @@ var DAV = function() {
 			+"/"+"www.myfavouritesandwich.org"
 			+"/"+key;
 		xhr.open("GET", url, false);
-		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
+//		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
+		xhr.setRequestHeader("Authorization", "Basic " + localStorage.getItem("OAuth2-cs::token"));
 		xhr.withCredentials = "true";
 		xhr.send();
 		if(xhr.status == 200) {
@@ -120,7 +121,8 @@ var DAV = function() {
 			+"/"+"www.myfavouritesandwich.org"
 			+"/"+key;
 		xhr.open("PUT", url, false);
-		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
+//		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
+		xhr.setRequestHeader("Authorization", "Basic " + localStorage.getItem("OAuth2-cs::token"));
 		xhr.withCredentials = "true";
 		xhr.send(text);
 		if(xhr.status != 200 && xhr.status != 204) {
