@@ -24,26 +24,23 @@ body{
 
 
 #footerSpacer {
-    padding-bottom: 200px; /* bottom padding for footer */
+	padding-bottom: 200px; /* bottom padding for footer */
 }
 html, body {
-height: 100%;
-    display: block;
-    margin: 0;
-    padding: 0;
-    width: 100%;
+	height: 100%;
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: 100%;
    	
 }
 
 body{
-display: block;
-
-width: 100%;
-min-width:960px;
-margin: 0 auto;
-overflow: visible;
-
-
+	display: block;
+	width: 100%;
+	min-width:960px;
+	margin: 0 auto;
+	overflow: visible;
 }
 //html{background: yellow;}
 
@@ -52,8 +49,7 @@ overflow: visible;
 	margin:0 auto; /* center, not in IE5 */	
 	height:auto !important; /* real browsers */
 	height:100%; /* IE6: treaded as min-height*/
-	min-height:100%; /* real browsers */
-	
+	min-height:100%; /* real browsers */	
 }
 
 header h1{
@@ -63,7 +59,6 @@ header h1{
 	width: 100%;
 	height: 64px;
 	text-indent: -5000px;
-	
 }
 section.container_12 {
 	display: block;
@@ -79,24 +74,21 @@ section.container_12 {
 	border-bottom: 1px solid #a7cb87;
 	position: relative;
 	margin: 0 auto;
-	
 }
 	#preheader span{
-	
 		position: relative;
 		width: 100%;
 		text-align: left;
 	}
 		#preheader span span{
-		display: block;
-		position: relative;
-		margin: 15px auto;
-		width: 960px;
-		text-align: left;
-			}
+			display: block;
+			position: relative;
+			margin: 15px auto;
+			width: 960px;
+			text-align: left;
+		}
 
-	#plateContainer{
-		
+	#plateContainer{		
 		display: block;
 		position: relative;
 		top: -50px;
@@ -104,7 +96,6 @@ section.container_12 {
 		margin-bottom: -300px;
 		height: 254px;
 		overflow: hidden;
-		
 	}
 	#plateContainer figure{
 		position: relative;
@@ -145,17 +136,16 @@ header.data{
 	margin-bottom: 220px;
 }
 	header.data form{
-		
 		width: 450px;
 		margin: 0 auto;
 		margin-bottom: 0px;
 	}
 header p{
-padding: 0;
-margin: 40px 0 20px 0;
-text-shadow: 0 1px 0 rgb(42,57,28);
--webkit-text-shadow: 0 1px 0 rgb(42,57,28);
--moz-text-shadow: 0 1px 0 rgb(42,57,28);
+	padding: 0;
+	margin: 40px 0 20px 0;
+	text-shadow: 0 1px 0 rgb(42,57,28);
+	-webkit-text-shadow: 0 1px 0 rgb(42,57,28);
+	-moz-text-shadow: 0 1px 0 rgb(42,57,28);
 }
 header.data p{
 	margin-bottom: 40px;
@@ -258,7 +248,7 @@ header p{
 	}
 	#register p{
 		margin-bottom: 10px;
-			}	
+	}	
 			
 
 #register input[type=text]{
@@ -277,19 +267,14 @@ header p{
 	height: 27px;
 	color: white;
 	position: relative;
-	top: -2px;
-	
+	top: -2px;	
 	padding: 0 15px;
 	font-size: 1.1em;
-	
-	
-	
 }		
 /* FOOTER
 ----------------------------------*/
 
 footer {
-	
 	background: #bed7a7 url('./img/footerback.png') repeat-x top left fixed;
 	width: 100%;
 	font-size: 1em;
@@ -300,8 +285,7 @@ footer {
 	color: #566f34;
 	text-align:left;
 	padding-top: 30px;
-	padding-bottom: 10px;
-		
+	padding-bottom: 10px;	
 	}
 	footer a{
 		color: #28381c;
@@ -323,7 +307,6 @@ footer {
 		position: absolute;
 		left: 370px;
 		margin: 0 auto;
-		
 	}
 	footer div #rightcolumn{
 		float: right;
