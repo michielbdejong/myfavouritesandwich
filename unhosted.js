@@ -92,15 +92,19 @@ var DAV = function() {
 		var hash = Base64.encode(tok);
 		return "Basic " + hash;
 	}
+	keyToUrl = function(key) {
+		var userNameParts = localStorage.getItem("unhosted::userName").split("@");
+		var resource = document.domain;
+		var url = localStorage.getItem("unhosted::davDomain")
+			+"webdav/"+userNameParts[1]
+			+"/"+userNameParts[0]
+			+"/"+resource
+			+"/"+key;
+		return url;
+	}
 	dav.get = function(key) {
 		var xhr = new XMLHttpRequest();
-		var url = localStorage.getItem("unhosted::davDomain")
-			+"webdav/"
-			+localStorage.getItem("unhosted::userName").replace("@", "/")
-			//+"/"+document.domain+
-			+"/"+"www.myfavouritesandwich.org"
-			+"/"+key;
-		xhr.open("GET", url, false);
+		xhr.open("GET", keyToUrl(key), false);
 		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
 		xhr.withCredentials = "true";
 		xhr.send();
@@ -113,13 +117,7 @@ var DAV = function() {
 	dav.put = function(key, value) {
 		var text = JSON.stringify(value);
 		var xhr = new XMLHttpRequest();
-		var url = localStorage.getItem("unhosted::davDomain")
-			+"webdav/"
-			+localStorage.getItem("unhosted::userName").replace("@", "/")
-			//+"/"+document.domain+
-			+"/"+"www.myfavouritesandwich.org"
-			+"/"+key;
-		xhr.open("PUT", url, false);
+		xhr.open("PUT", keyToUrl(key), false);
 		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
 		xhr.withCredentials = "true";
 		xhr.send(text);
