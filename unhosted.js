@@ -111,7 +111,7 @@ var DAV = function() {
 		if(xhr.status == 200) {
 			return JSON.parse(xhr.responseText);
 		} else {
-			alert("error: got status "+xhr.status+" when doing basic auth GET on URL "+url);
+			alert("error: got status "+xhr.status+" when doing basic auth GET on url "+keyToUrl(key));
 		}
 	}
 	dav.put = function(key, value) {
@@ -122,7 +122,7 @@ var DAV = function() {
 		xhr.withCredentials = "true";
 		xhr.send(text);
 		if(xhr.status != 200 && xhr.status != 204) {
-			alert("error: got status "+xhr.status+" when doing basic auth PUT on URL "+url);
+			alert("error: got status "+xhr.status+" when doing basic auth PUT on url "+keyToUrl(key));
 		}
 	}
 	return dav;
