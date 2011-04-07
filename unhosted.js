@@ -32,7 +32,7 @@ var WebFinger = function() {
 			xhr.open("GET", url, false);
 			xhr.send();
 			if(xhr.status == 200) {
-				return JSON.parse(xhr.responseText).links["http:\/\/unhosted.org\/spec\/DAV\/2011-04\/"];
+				return JSON.parse(xhr.responseText).links["http:\/\/unhosted.org\/spec\/dav\/0.1"];
 			}
 		}
 		return null;
