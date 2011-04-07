@@ -4,7 +4,7 @@
 
 var WebFinger = function() {
 	var webFinger = {};
-	var getHostMeta = function(userName) {
+	var getHostMeta = function(userName, linkRel) {
 		//split the userName at the "@" symbol:
 		var parts = userName.split("@");
 		if(parts.length == 2) {
@@ -13,20 +13,25 @@ var WebFinger = function() {
 
 			//get the host-meta data for the domain:
 			var xhr = new XMLHttpRequest();
-			var url = "http://"+domain+"/.well-known/host-meta?format=json";
+			var url = "http://"+domain+"/.well-known/host-meta";
 			xhr.open("GET", url, false);	
 			xhr.send();
 			if(xhr.status == 200) {
-				return JSON.parse(xhr.responseText);
+				var hostMetaLinks = xhr.responseXML.documentElement.getElementsByTagName('Link');
+				var i;
+				for(i=0; i<hostMetaLinks.length; i++) {
+					if(hostMetaLinks[i].attributes.getNamedItem('rel').value == linkRel) {
+						return hostMetaLinks[i].attributes.getNamedItem('template').value;
+					}
+				}
 			}
 		}
 		return null;
 	}
 	webFinger.getDavDomain = function(userName) {
 		//get the WebFinger data for the user and extract the uDAVdomain:
-		var hostMeta = getHostMeta(userName);
-		if(hostMeta && hostMeta.links && hostMeta.links.lrdd && hostMeta.links.lrdd.length && hostMeta.links.lrdd[0].template) {
-			var template = hostMeta.links.lrdd[0].template;
+		var template = getHostMeta(userName, 'lrdd');
+		if(template) {
 			var xhr = new XMLHttpRequest();
 			var url = template.replace("\{uri\}", "acct:"+userName, true);
 			xhr.open("GET", url, false);
@@ -38,12 +43,11 @@ var WebFinger = function() {
 		return null;
 	}
 	webFinger.getAdminUrl = function(userName) {
-		var fromHostMeta = getHostMeta(userName);
-		if(fromHostMeta && fromHostMeta.links && fromHostMeta.links.register) {
-			return fromHostMeta.links.register[0].template.replace("\{uri\}",userName).replace("\{redirect_url\}", window.location);
-		} else {
-			return null;
+		var template = getHostMeta(userName, 'register');
+		if(template) {
+			return template.replace("\{uri\}",userName).replace("\{redirect_url\}", window.location);
 		}
+		return null;
 	}
 	return webFinger;
 }
