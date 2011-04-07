@@ -28,7 +28,21 @@ var WebFinger = function() {
 		}
 		return null;
 	}
-	webFinger.getDavDomain = function(userName) {
+	var matchLinkRel = function(linkRel, majorDavVersion, minMinorDavVersion) {
+		//TODO: do some real reg exp...
+		var davVersion = {major:0, minor:1};
+		
+		if(davVersion.major == majorDavVersion) {
+			if(majorDavVersion == 0) {//pre-1.0.0, every minor version is breaking, see http://semver.org/
+				return (davVersion.minor == minMinorDavVersion);
+			} else {//from 1.0.0 onwards, check if available version is at least minMinorDavVersion
+				return (davVersion.minor >= minMinorDavVersion);
+			}
+		} else {
+			return false;
+		}
+	}
+	webFinger.getDavDomain = function(userName, majorVersion, minMinorVersion) {
 		//get the WebFinger data for the user and extract the uDAVdomain:
 		var template = getHostMeta(userName, 'lrdd');
 		if(template) {
@@ -37,7 +51,13 @@ var WebFinger = function() {
 			xhr.open("GET", url, false);
 			xhr.send();
 			if(xhr.status == 200) {
-				return JSON.parse(xhr.responseText).links["http:\/\/unhosted.org\/spec\/dav\/0.1"];
+				var linkElts = xhr.responseXML.documentElement.getElementsByTagName('Link');
+				var i;
+				for(i=0; i < linkElts.length; i++) {
+					if(matchLinkRel(linkElts[i].attributes.getNamedItem('rel').value, majorVersion, minMinorVersion)) {
+						return linkElts[i].attributes.getNamedItem('href').value;
+					}
+				}
 			}
 		}
 		return null;
@@ -148,7 +168,7 @@ var Unhosted = function() {
 			OAuth().revoke();
 		} else {
 			localStorage.setItem("unhosted::userName", userName);
-			var davDomain = WebFinger().getDavDomain(userName);
+			var davDomain = WebFinger().getDavDomain(userName, 0, 1);
 			if(davDomain != null) {
 				localStorage.setItem("unhosted::davDomain", davDomain);
 				OAuth().dance(davDomain, userName, document.domain);
