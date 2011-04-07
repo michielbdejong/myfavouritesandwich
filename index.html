@@ -21,27 +21,37 @@
 var unhosted = Unhosted();
 
 function unlockUnhostedAccount(userName) {
-	unhosted.setUserName(userName);
+	var ret = unhosted.setUserName(userName);
+	debug("unhosted.setUserName", [userName], ret);
 }
 function lockUnhostedAccount() {
-	unhosted.setUserName(null);
+	var ret = unhosted.setUserName(null);
+	debug("unhosted.setUserName", [null], ret);
 }
 function registerUnhostedAccount(userName) {
-	return unhosted.register(userName);
+	var ret = unhosted.register(userName);
+	debug("unhosted.registerUserName", [userName, ret);
+	return ret;
 }
 
 function loadSandwich() {
-	return unhosted.dav.get('favSandwich.json');
+	var ret = unhosted.dav.get("favSandwich.json");
+	debug("unhosted.dav.get, ["favSandwich.json"], ret);
+	return ret;
 }
 function saveSandwich(ingredients) {
-	unhosted.dav.put('favSandwich.json', {"ingredients":ingredients});
+	var ret = unhosted.dav.put("favSandwich.json", {"ingredients":ingredients});
+	debug("unhosted.dav.put", ["favSandwich.json", {"ingredients":ingredients}], ret);
 }
 
 
   /////////////////////
  //  presentation:  //
 /////////////////////
-
+function debug(apiMethod, params, retVal) {
+	document.getElementById("debug").innerHtml = document.getElementById("debug").innerHtml +
+		apiMethod + "(" + JSON.stringify(params) + ")" + "->" + retVal + "<br>";
+}
 function showCurrentUser(userName) {
 	document.getElementById('currentUser').innerHTML=
 		'Current user is <strong>'
@@ -88,7 +98,7 @@ function show() {
 <div id="mainWrap">
 
 
-
+	<div id="debug">API calls to unhosted.js:<br></div>
 	<div id="lockedView">
 
 
