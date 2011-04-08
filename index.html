@@ -30,13 +30,13 @@ function lockUnhostedAccount() {
 }
 function registerUnhostedAccount(userName) {
 	var ret = unhosted.register(userName);
-	debug("unhosted.registerUserName", [userName, ret);
+	debug("unhosted.registerUserName", [userName], ret);
 	return ret;
 }
 
 function loadSandwich() {
 	var ret = unhosted.dav.get("favSandwich.json");
-	debug("unhosted.dav.get, ["favSandwich.json"], ret);
+	debug("unhosted.dav.get", ["favSandwich.json"], ret);
 	return ret;
 }
 function saveSandwich(ingredients) {
