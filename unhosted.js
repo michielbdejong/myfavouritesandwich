@@ -15,17 +15,11 @@ var WebFinger = function() {
 			var xhr = new XMLHttpRequest();
 			var url = "http://"+domain+"/.well-known/host-meta";
 			xhr.open("GET", url, false);	
+			//WebFinger spec allows application/xml+xrd as the mime type, but we need it to be text/xml for xhr.responseXML to be non-null:
+			xhr.overrideMimeType('text/xml');
 			xhr.send();
 			if(xhr.status == 200) {
-
-
-				//HACK WHILE I FIND OUT WHY xhr.responseXML is null:
-				var parser=new DOMParser();
-				var responseXML = parser.parseFromString(xhr.responseText, "text/xml");
-				//END HACK -Michiel.
-
-	
-				var hostMetaLinks = responseXML.documentElement.getElementsByTagName('Link');
+				var hostMetaLinks = xhr.responseXML.documentElement.getElementsByTagName('Link');
 				var i;
 				for(i=0; i<hostMetaLinks.length; i++) {
 					if(hostMetaLinks[i].attributes.getNamedItem('rel').value == linkRel) {
@@ -57,17 +51,11 @@ var WebFinger = function() {
 			var xhr = new XMLHttpRequest();
 			var url = template.replace("\{uri\}", "acct:"+userName, true);
 			xhr.open("GET", url, false);
+			//WebFinger spec allows application/xml+xrd as the mime type, but we need it to be text/xml for xhr.responseXML to be non-null:
+			xhr.overrideMimeType('text/xml');
 			xhr.send();
 			if(xhr.status == 200) {
-
-
-				//HACK WHILE I FIND OUT WHY xhr.responseXML is null:
-				var parser=new DOMParser();
-				var responseXML = parser.parseFromString(xhr.responseText, "text/xml");
-				//END HACK -Michiel.
-
-	
-				var linkElts = responseXML.documentElement.getElementsByTagName('Link');
+				var linkElts = xhr.responseXML.documentElement.getElementsByTagName('Link');
 				var i;
 				for(i=0; i < linkElts.length; i++) {
 					if(matchLinkRel(linkElts[i].attributes.getNamedItem('rel').value, majorVersion, minMinorVersion)) {
