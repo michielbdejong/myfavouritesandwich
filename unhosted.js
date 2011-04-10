@@ -49,7 +49,7 @@ var WebFinger = function() {
 		var template = getHostMeta(userName, 'lrdd');
 		if(template) {
 			var xhr = new XMLHttpRequest();
-			var url = template.replace("\{uri\}", "acct:"+userName, true);
+			var url = template.replace(/{uri}/, "acct:"+userName, true);
 			xhr.open("GET", url, false);
 			//WebFinger spec allows application/xml+xrd as the mime type, but we need it to be text/xml for xhr.responseXML to be non-null:
 			xhr.overrideMimeType('text/xml');
