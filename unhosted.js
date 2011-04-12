@@ -101,7 +101,7 @@ var OAuth = function () {
 		var results = regex.exec(window.location.href);
 		if(results) {
 			localStorage.setItem("OAuth2-cs::token", results[1]);
-			window.location = "/";
+			window.location = location.href.split("?")[0];
 		}
 	}
 	return oAuth;
@@ -122,7 +122,7 @@ var DAV = function() {
 	}
 	keyToUrl = function(key) {
 		var userNameParts = localStorage.getItem("unhosted::userName").split("@");
-		var resource = document.domain;
+		var resource = location.host + location.pathname;
 		var url = localStorage.getItem("unhosted::davDomain")
 			+"webdav/"+userNameParts[1]
 			+"/"+userNameParts[0]
@@ -175,7 +175,7 @@ var Unhosted = function() {
 			var davDomain = WebFinger().getDavDomain(userName, 0, 1);
 			if(davDomain != null) {
 				localStorage.setItem("unhosted::davDomain", davDomain);
-				OAuth().dance(davDomain, userName, document.domain);
+				OAuth().dance(davDomain, userName, location.host + location.pathname);
 			}
 		}
 	}
