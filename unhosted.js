@@ -151,7 +151,7 @@ var DAV = function() {
 		xhr.setRequestHeader("Authorization", makeBasicAuth(localStorage.getItem("unhosted::userName"), localStorage.getItem("OAuth2-cs::token")));
 		xhr.withCredentials = "true";
 		xhr.send(text);
-		if(xhr.status != 200 && xhr.status != 204) {
+		if(xhr.status != 200 && xhr.status != 201 && xhr.status != 204) {
 			alert("error: got status "+xhr.status+" when doing basic auth PUT on url "+keyToUrl(key));
 		}
 	}
