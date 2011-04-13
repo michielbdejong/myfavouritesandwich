@@ -138,6 +138,8 @@ var DAV = function() {
 		xhr.send();
 		if(xhr.status == 200) {
 			return JSON.parse(xhr.responseText);
+		} if(xhr.status == 404) {
+			return null;
 		} else {
 			alert("error: got status "+xhr.status+" when doing basic auth GET on url "+keyToUrl(key));
 		}

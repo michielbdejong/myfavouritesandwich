@@ -31,7 +31,12 @@ function registerUnhostedAccount(userName) {
 }
 
 function loadSandwich() {
-	return unhosted.dav.get("favSandwich.json");
+	var sandwich = unhosted.dav.get("favSandwich.json");
+	if(sandwich) {
+		return sandwich;
+	} else {
+		return {ingredients:["", ""]};
+	}
 }
 function saveSandwich(ingredients) {
 	unhosted.dav.put("favSandwich.json", {"ingredients":ingredients});
