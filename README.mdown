@@ -1,0 +1,14 @@
+http://www.myfavouritesandwich.org - an unhosted web app for demo purposes. You 
+can try it on http://www.myfavouritesandwich.org/ or fork it and put it on your 
+own domain, and then adapt what it does. The unhosted.js file contains the generic 
+functionality for connecting to the unhosted account of the current user and 
+storing and retrieving sandwich ingredients. index.html has some data access functions and
+ presentation functions that should all be pretty self-explanatory. Basically, the cycle is:
+
+ * var unhosted = Unhosted();
+ * unhosted.setUserName('user@domain');
+ * unhosted.dav.set('foo', 'bar');
+ * var myBar = unhosted.dav.get('foo');
+ * unhosted.setUserName(null);
+
+Enjoy!
