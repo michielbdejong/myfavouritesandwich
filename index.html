@@ -21,14 +21,24 @@
 
 var unhosted = Unhosted();
 
-function unlockUnhostedAccount(userName) {
+function unlockUnhostedAccount(userName, password) {
+	unhosted.setWalletService("https://wallet.myfavouritesandwich.org/");
+	unhosted.setHostedWebDAV("https://wallet.myfavouritesandwich.org/");
 	unhosted.setUserName(userName);
+	unhosted.setPassword(password);
+	unhosted.connect();
+	show();
 }
 function lockUnhostedAccount() {
 	unhosted.setUserName(null);
 }
-function registerUnhostedAccount(userName) {
-	return unhosted.register(userName);
+function registerUnhostedAccount(userName, password, password2) {
+	if(password != password2) {
+		return "Please enter the same password twice";
+	}
+	unhosted.setUserName(userName);
+	unhosted.setPassword(password);
+	return unhosted.register();
 }
 
 function loadSandwich() {
@@ -51,7 +61,7 @@ function showCurrentUser(userName) {
 	document.getElementById('currentUser').innerHTML=
 		'Current user is <strong>'
 		+unhosted.getUserName()
-		+'</strong> [<a onclick="localStorage.removeItem(\'OAuth2-cs::token\');show();">Lock</a>]';
+		+'</strong> [<a onclick="lockUnhostedAccount();show();">Lock</a>]';
 }
 
 function showCurrentSandwich(sandwich) {
@@ -99,16 +109,25 @@ function show() {
 
 		<header>
 			<h1>My Favourite Sandwich</h1>
-			<p>Login with my unhosted account</p>
+			<p>Login</p>
 			<input id="user" name="unhostedacct" onfocus="if(this.value=='user@provider.org'){this.className='formfocus'; this.value=''}" onblur="if(!this.value){this.className='formblur'; this.value='user@provider.org'}" type="text" value="user@provider.org"/>
-			<input class="submit" name="submit" type="submit" value="Submit!" onclick="unlockUnhostedAccount(document.getElementById('user').value);show();">
-			<p class="hint">hint:<span> try demo@demo.redlibre.org, with password 'demo'</span></p>
+			<br>Password:<input id="pwd" name="unhostedacct" type="password"/>
+			<br><input class="submit" name="submit" type="submit" value="Submit!"
+				 onclick="unlockUnhostedAccount(document.getElementById('user').value, document.getElementById('pwd').value);show();">
+			<p class="hint">hint:<span> get an <a href="https://dev.unhosted.org/register.php">unhosted developer's account</a>.</span></p>
 		</header>
 			
 		<div id="register">
-			<p><strong>Don't have an unhosted account? </strong> Register here:</p>
-			<input id="registerAcct" name="unhostedacct" type="text" value="user@redlibre.org"/>
-			<input class="submit" name="submit" type="submit" value="Create account" onclick="document.getElementById('errorText').innerHTML=registerUnhostedAccount(document.getElementById('registerAcct').value)">
+			<p><strong>Don't have an account? </strong> Register here:</p>
+			username:<input id="registerAcct" name="unhostedacct" type="text" value="user@provider.org"/>
+			<br>password:<input id="registerPwd" name="unhostedacct" type="password"/>
+			<br>repeat:<input id="registerPwd2" name="unhostedacct" type="password"/>
+			<input class="submit" name="submit" type="submit" value="Create account"
+				 onclick="document.getElementById('errorText').innerHTML=registerUnhostedAccount(
+					document.getElementById('registerAcct').value,
+					document.getElementById('registerPwd').value,
+					document.getElementById('registerPwd2').value
+				)">
 			<p><span id="errorText"></span></p>
 		</div>
 

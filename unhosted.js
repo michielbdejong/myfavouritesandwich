@@ -19,14 +19,6 @@ var WebFinger = function() {
 			xhr.overrideMimeType('text/xml');
 			xhr.send();
 			if(xhr.status == 200) {
-
-
-				//HACK WHILE I FIND OUT WHY xhr.responseXML is null:
-				var parser=new DOMParser();
-				var responseXML = parser.parseFromString(xhr.responseText, "text/xml");
-				//END HACK -Michiel.
-
-	
 				var hostMetaLinks = responseXML.documentElement.getElementsByTagName('Link');
 				var i;
 				for(i=0; i<hostMetaLinks.length; i++) {
@@ -63,14 +55,6 @@ var WebFinger = function() {
 			xhr.overrideMimeType('text/xml');
 			xhr.send();
 			if(xhr.status == 200) {
-
-
-				//HACK WHILE I FIND OUT WHY xhr.responseXML is null:
-				var parser=new DOMParser();
-				var responseXML = parser.parseFromString(xhr.responseText, "text/xml");
-				//END HACK -Michiel.
-
-	
 				var linkElts = responseXML.documentElement.getElementsByTagName('Link');
 				var i;
 				for(i=0; i < linkElts.length; i++) {
@@ -186,25 +170,61 @@ var Unhosted = function() {
 	unhosted.setUserName = function(userName) {
 		if(userName == null) {
 			localStorage.removeItem("unhosted::userName");
-			localStorage.removeItem("unhosted::davDomain")
+			localStorage.removeItem("unhosted::davDomain");
+			localStorage.setItem("unhosted::isConnected", "no");
 			OAuth().revoke();
 		} else {
 			localStorage.setItem("unhosted::userName", userName);
 			var davDomain = WebFinger().getDavDomain(userName, 0, 1);
-			if(davDomain != null) {
+			if(davDomain == null) {
+				localStorage.setItem("unhosted::davDomain", localStorage.getItem("unhosted::hostedWebDAV"));
+				localStorage.setItem("unhosted::isUnhosted", "no");
+				localStorage.setItem("unhosted::isConnected", "yes");
+			} else {
 				localStorage.setItem("unhosted::davDomain", davDomain);
-				OAuth().dance(davDomain, userName, location.host + location.pathname);
+				localStorage.setItem("unhosted::isUnhosted", "yes");
+				localStorage.setItem("unhosted::isConnected", "yes");
 			}
 		}
 	}
 
 	unhosted.getUserName = function() {
-		if(localStorage.getItem("OAuth2-cs::token")) {
-			return localStorage.getItem("unhosted::userName").trim();
+		if(localStorage.getItem("unhosted::isConnected") == "yes") {
+			if(localStorage.getItem("unhosted::isUnhosted") == "yes") {
+				return localStorage.getItem("unhosted::userName").trim();
+			} else {
+				return localStorage.getItem("unhosted::userName").trim()+" WARNING: YOUR ACCOUNT IS HOSTED AT MYFAVOURITESANDWICH.<BR>PLEASE SEE <a>HERE</a> ABOUT GETTING AN UNHOSTED ACCOUNT!";
+			}
 		}
 		return null;
 	}
 
+	unhosted.setWalletService = function(walletService) {
+		localStorage.setItem("unhosted::walletService", walletService);
+	}
+
+	unhosted.setHostedWebDAV = function(walletService) {
+		localStorage.setItem("unhosted::hostedWebDAV", walletService);
+	}
+
+	unhosted.setPassword = function(password) {
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", 
+			localStorage.getItem("unhosted::walletService")
+			+"?user_name="+localStorage.getItem("unhosted::userName")
+			+"&pwd="+password, false);
+		xhr.send();
+		if(xhr.status == 200) {
+			localStorage.setItem("unhosted::strongPassword", xhr.responseText);
+		}
+	}
+	unhosted.connect = function() {
+		var davDomain = localStorage.getItem("unhosted::davDomain");
+		var userName = localStorage.getItem("unhosted::userName");
+		if((davDomain != null) && (localStorage.getItem("unhosted::isUnhosted") == "yes")) {
+			OAuth().dance(davDomain, userName, location.host + location.pathname);
+		}
+	}
 	unhosted.register = function(userName) {
 		var registerUrl = WebFinger().getAdminUrl(userName);
 		if(registerUrl) {
