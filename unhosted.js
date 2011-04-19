@@ -19,6 +19,12 @@ var WebFinger = function() {
 			xhr.overrideMimeType('text/xml');
 			xhr.send();
 			if(xhr.status == 200) {
+				
+				//HACK
+				var parser=new DOMParser();
+				var responseXML = parser.parseFromString(xhr.responseText, "text/xml");
+				//END HACK
+
 				var hostMetaLinks = responseXML.documentElement.getElementsByTagName('Link');
 				var i;
 				for(i=0; i<hostMetaLinks.length; i++) {
@@ -55,6 +61,12 @@ var WebFinger = function() {
 			xhr.overrideMimeType('text/xml');
 			xhr.send();
 			if(xhr.status == 200) {
+				
+				//HACK
+				var parser=new DOMParser();
+				var responseXML = parser.parseFromString(xhr.responseText, "text/xml");
+				//END HACK
+
 				var linkElts = responseXML.documentElement.getElementsByTagName('Link');
 				var i;
 				for(i=0; i < linkElts.length; i++) {
