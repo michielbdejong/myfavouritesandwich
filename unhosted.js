@@ -97,10 +97,20 @@ var OAuth = function () {
 	}
 	//receive incoming OAuth token, if present:
 	oAuth.receiveToken = function() {
-		var regex = new RegExp("[\\?&]token=([^&#]*)");
+		var regex = new RegExp("[\\?&]user_name=([^&#]*)");
 		var results = regex.exec(window.location.href);
 		if(results) {
-			localStorage.setItem("OAuth2-cs::token", results[1]);
+			localStorage.setItem("unhosted::userName", results[1]);
+			var davDomain = WebFinger().getDavDomain(results[1], 0, 1);
+			if(davDomain != null) {
+				localStorage.setItem("unhosted::davDomain", davDomain);
+				localStorage.setItem("unhosted::isUnhosted", "yes");
+			}
+		}
+		var regex2 = new RegExp("[\\?&]token=([^&#]*)");
+		var results2 = regex2.exec(window.location.href);
+		if(results2) {
+			localStorage.setItem("OAuth2-cs::token", results2[1]);
 			window.location = location.href.split("?")[0];
 		}
 	}
@@ -193,7 +203,7 @@ var Unhosted = function() {
 			if(localStorage.getItem("unhosted::isUnhosted") == "yes") {
 				return localStorage.getItem("unhosted::userName").trim();
 			} else {
-				return localStorage.getItem("unhosted::userName").trim()+" WARNING: YOUR ACCOUNT IS HOSTED AT MYFAVOURITESANDWICH.<BR>PLEASE SEE <a>HERE</a> ABOUT GETTING AN UNHOSTED ACCOUNT!";
+				return localStorage.getItem("unhosted::userName").trim()+" WARNING: YOUR ACCOUNT IS HOSTED AT MYFAVOURITESANDWICH.<BR>PLEASE SEE <a href='https://dev.unhosted.org/register.php?redirect_url=www.myfavouritesandwich.org&scope=www.myfavouritesandwich.org'>HERE</a> ABOUT GETTING AN UNHOSTED ACCOUNT!";
 			}
 		}
 		return null;
