@@ -1,0 +1,29 @@
+[http://www.myfavouritesandwich.org/](http://www.myfavouritesandwich.org) 
+- an unhosted web app for demo purposes. You 
+can try it on [http://www.myfavouritesandwich.org/](http://www.myfavouritesandwich.org/)
+ or fork it and put it on your 
+own domain, and then adapt what it does. The unhosted.js file contains the generic 
+functionality for connecting to the unhosted account of the current user and 
+storing and retrieving sandwich ingredients. index.html has some data access functions and
+ presentation functions that should all be pretty self-explanatory. Basically, the cycle is:
+
+When you get the username from the login screen, you call:
+
+ * var unhosted = Unhosted();
+ * unhosted.setUserName('user@domain');
+
+You can check if there is a current user with:
+
+ * var myCheck = unhosted.getUserName();
+
+You can set any JS object into unhosted.dav, and retrieve it the next day:
+
+ * unhosted.dav.set('foo', {bar:1});
+ * var myBar = unhosted.dav.get('foo');
+
+To disconnect, simply set the current user to null:
+
+ * unhosted.setUserName(null);
+
+Pretty straight-forward, huh? Unhosted web apps: freeing software and data from each other. 
+Fork this app and help free the web. Enjoy!
