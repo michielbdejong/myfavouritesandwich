@@ -1,2 +1,2 @@
-deprecated, see https://github.com/michiel-unhosted/unhosted/ instead
+deprecated, see https://github.com/unhosted/unhosted/ instead
 ======
