@@ -32,7 +32,8 @@ var Base64 = {
 			if (isNaN(chr2)) {
 				enc3 = enc4 = 64;
 			} else if (isNaN(chr3)) {
-				enc4 = 64;
+				enc4 = 64
+;
 			}
  
 			output = output +
@@ -74,6 +75,10 @@ var Base64 = {
 			}
  
 		}
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 32;
+			} else if (isNaN(chr3)) {
+				enc4 = 32
  
 		output = Base64._utf8_decode(output);
  
